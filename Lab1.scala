@@ -34,5 +34,3 @@ def sqrtErr(c: Double, x0: Double, epsilon: Double): Double ={
   else sqrtErr(c, (sqrtStep(c,x0)), epsilon)
 }
 
-
-
