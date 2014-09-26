@@ -7,7 +7,7 @@ object Lab1 extends jsy.util.JsyApplication {
    * <Kevin Vo>
    * 
    * Partner: <Justin Tang>
-   * Collaborators: <Any Collaborators>
+   * Collaborators: <Paul, Brady>
    */
 
   /*
@@ -75,46 +75,56 @@ object Lab1 extends jsy.util.JsyApplication {
 
   /* Exercises */
 
-//absolute value function
-def abs(n: Double) : Double = {
-  if (n < 0) (-n) else (n)
+//Absolute Value Function
+
+  def abs(n: Double): Double = {
+	if (n < 0) (-n)
+	else n
 }
 
 //XOR Function
-def xor(a: Boolean, b: Boolean) Boolean = {
-	if (a==b) true else false
+
+  def xor(a: Boolean, b: Boolean): Boolean = {
+	if(a==b) false
+	else true
 }
 
-//Repeat a string "n" number of times recurseively
-def repeats(s: String, n: Int): String ={
-	if (n < 0) "Error invalid int"
-	else if (n == 1) s
-	else s + repeats(s, (n-1))
-}
+//Repeat a string "n" times recursively
 
-//Implement a function sqrtStep
-def sqrtStep(c: Double, xn: Double): Double = {
-  (xn - (((xn*xn)-c)/(2*xn)))
+  def repeat(s: String, n: Int): String = {
+	require(n >= 0)	
+	if(n==0) ""
+	else if (n ==1) s
+	else s + repeat(s,(n-1))
 }
   
-//Implement a function sqrtN
-def sqrtN(c: Double, x0: Double, n: Int): Double = {
-  require( c>0 && x0>0 && n>0)
-  val x = sqrtStep(c, x0)
-  if (n <=1) x
-  else sqrtN(c,x,(n-1))
-}
+//Square root step
   
-//Now, implement a function sqrtErr (computes approximations xn until the approximation error is within ε (epsilon))
-def sqrtErr(c: Double, x0: Double, epsilon: Double): Double ={
-  if (abs((x0*x0)-c) < epsilon) x0
-  else sqrtErr(c, (sqrtStep(c,x0)), epsilon)
+  def sqrtStep(c: Double, xn: Double): Double = {
+	(xn - (((xn*xn)-c)/(2*xn)))
 }
 
-def sqrt(c: Double): Double = {
-	require(c >= 0)
-	if (c == 0) 0 else sqrtErr(c, 1.0, 0.0001)
+//Squre root
+
+  def sqrtN(c: Double, x0: Double, n: Int): Double = {
+	require( c>0 && x0>0 && n>= 0)
+	val x = sqrtStep(c,x0)
+	if(n==0) x0
+	else if (n<=1) x
+	else sqrtN(c,x,(n-1))
 }
+
+  def sqrtErr(c: Double, x0: Double, epsilon: Double): Double = {
+	require(epsilon>0 && c>0 && x0>0)	
+	if (abs((x0*x0)-c)< epsilon) x0
+	else sqrtErr(c,(sqrtStep(c,x0)),epsilon)
+}
+
+  def sqrt(c: Double): Double = {
+    require(c >= 0)
+    if (c == 0) 0 
+    else sqrtErr(c, 1.0, 0.0001)
+  }
   
   /* Search Tree */
   
@@ -122,96 +132,118 @@ def sqrt(c: Double): Double = {
   case object Empty extends SearchTree
   case class Node(l: SearchTree, d: Int, r: SearchTree) extends SearchTree
   
-def repOk(t: SearchTree): Boolean = {
-	def check(t: SearchTree, min: Int, max: Int): Boolean = t match {
-		case Empty => true
-		case Node(l, d, r) => {
-			if (t.l.d >= t.d) false
-			else if (t.r.d < t.d) false
-			check(t.l)
-			check(t.r)
-		}
+// Checks to see if the binarytree is valid
+// Uses a recursive helper function to check when it is Empty or a Node
+// If it is empty, we have searched to the end of that branch without an issue
+// If it is a node, check that the value of the node is less than our max value and greater than or equal to our min value
+// If it is, call check again on the left with the same min, and the new max being d. Then do the vice versa on the right tree
+// If it doesn't fulfill those expectations that make that node valid based it's parent node, return false.  
+  
+  def repOk(t: SearchTree): Boolean = {
+    def check(t: SearchTree, min: Int, max: Int): Boolean = t match {
+      case Empty => true
+      case Node(l, d, r) => {
+        if (d >= min && d <= max) {
+         (check (l, min, (d-1)) && check (r, d, max))
+        } 
+	else false
+       }
     }
     check(t, Int.MinValue, Int.MaxValue)
-}
+  }
   
-def insert(t: SearchTree, n: Int): SearchTree = t match ={
+  def insert(t: SearchTree, n: Int): SearchTree = t match {
 	case Empty => Node(Empty, n, Empty)
-	case Node(l, d, r) => {
-		if (n < d) Node(insert(l, n), d, r)
-		else Node(l, d, insert(r.n))
+	case Node(l,d,r) => {
+	  if(n<d) Node(insert(l,n),d,r)  
+	  else Node(l,d,insert(r,n))
+	// check the left tree, l, with max value d since all values in r must be less than d.
+	// check the right tree, r, with min value d since all values in r must be greater than or equal to d
+	
 	}
-}
- 
-def deleteMin(t: SearchTree): (SearchTree, Int) = {
-	require(t != Empty)
-	(t: @unchecked) match {
-		case Node(Empty, d, r) => (r, d)
-		case Node(l, d, r) =>
-			val (l1, m) = deleteMin(l)
-			(Node(l1, d, r), m)
+  }
+	
+
+// Can't delete the min from an empty tree
+// If the left of the node is empty, return the remaining right tree cause it's all the greater values
+// If the left isn't empty, there is a lesser value in the left subtree so call deleteMin on the left and store the returned tree and deleted value
+// This allows us to recreate the initial tree with the left subtree having the min value deleted.
+
+  
+  def deleteMin(t: SearchTree): (SearchTree, Int) = {
+    require(t != Empty)
+    (t: @unchecked) match {
+      case Node(Empty, d, r) => (r, d)
+      case Node(l, d, r) =>
+        val (l1, m) = deleteMin(l)
+        (Node(l1,d,r),m)
     }
   }
  
-
-def delete(t: SearchTree, n: Int): SearchTree = {
-	t match {
-		case Empty => Empty
-		case Node(l, d, r) => if (n > d) Node(l, d, delete(r,n))
-		else if (n < d) Node(delete(l, n), d, r)
-		else if (l == Empty) r
-		else if (r == Empty) 1
-		else {
-			val (a,b) = deleteMin(r)
-			Node(l, b, a)
-		}
+// Four different cases
+	// Empty Tree: Return t
+	// Not Empty:
+		// If the value to be deleted is less than the node, create a new tree with calling delete on the left subtree (as the left subtree since it returns a tree)
+		// If the value to be deleted is greater than the node, create a new tree with calling delete on the right subtree (as the right subtree since it returns a tree)
+	// Note: This ignores if they are equal
+	// If they are equal
+		// One or no child subtree:
+			// Make only subtree the new tree (if both empty, return will be Empty)
+			// Else (two subtrees) 
+ 
+ 
+  def delete(t: SearchTree, n: Int): SearchTree = t match {
+      case Empty => Empty
+      case Node(l, d, r) =>
+	if(n > d) Node(l, d, delete(r, n)) 
+	else if(n < d) Node(delete(l, n), d, r)
+	else {
+		if(l == Empty) r
+		else if(r == Empty) l
+	        else {
+		 val tree = deleteMin(r)
+	         Node(l, tree._2, tree._1) 
+	      	}
 	}
-}
-
+  }
   /* JavaScripty */
   
-def eval(e: Expr): Double = e match {
-	case N(n) => n
-	
-	case Unary(uop, e1) => uop match {
-		case Neg => -eval(e1)
-		case _ => throw new UnsupportedOperationException
-	}
+  def eval(e: Expr): Double = e match {
+    case N(n) => n
+    case Unary(uop,e1) => uop match {
+	case Neg => -eval(e1)
+    }
+    case Binary(bop,e1,e2) => bop match {
+	case Plus => eval(e1) + eval(e2)
+	case Minus => eval(e1) - eval(e2)
+	case Times => eval(e1) * eval(e2)
+	case Div => eval(e1)/eval(e2)
+    }
+  }
+  
+ // Interface to run your interpreter from a string.  This is convenient
+ // for unit testing.
+ def eval(s: String): Double = eval(Parser.parse(s))
 
-	case Binary(bop, e1, e2) => bop match {
-		case Plus => eval(e1) + eval(e2)
-		case Minus => eval(e1) - eval(e2)
-		case Times => eval(e1) * eval(e2)
-		case Div => eval(e1) / eval(e2)
-		case_ => throw new UnsupportedOperationException
-	}
-	
-	case _ => throw new UnsupportedOperationException
-}
-
-
-// Interface to run your interpreter from a string.  This is convenient
-// for unit testing.
-def eval(s: String): Double = eval(Parser.parse(s))
 
 
  /* Interface to run your interpreter from the command-line.  You can ignore the code below. */ 
   
-def processFile(file: java.io.File) {
-	if (debug) { println("Parsing ...") }
+ def processFile(file: java.io.File) {
+    if (debug) { println("Parsing ...") }
     
-	val expr = Parser.parseFile(file)
+    val expr = Parser.parseFile(file)
     
-	if (debug) {
-		println("\nExpression AST:\n  " + expr)
-		println("------------------------------------------------------------")
-	}
+    if (debug) {
+      println("\nExpression AST:\n  " + expr)
+      println("------------------------------------------------------------")
+    }
     
-	if (debug) { println("Evaluating ...") }
+    if (debug) { println("Evaluating ...") }
     
-	val v = eval(expr)
+    val v = eval(expr)
     
-	println(v)
+    println(v)
   }
 
 }
