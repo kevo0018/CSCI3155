@@ -113,7 +113,7 @@ B ::= d|A
   4. acd: FALSE (the output is length 3, but there is value that returns an empty set.)
   
   5. accc: TRUE
-              S
+            S
         / /   \ \
        a S     c B
          |       |
