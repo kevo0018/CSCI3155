@@ -91,6 +91,7 @@ B ::= d|A
   
   2. acccbd: FALSE (cannot turn 'B' into 'bd'.)
             S
+
         / /   \ \
        a S     c B
          |       |

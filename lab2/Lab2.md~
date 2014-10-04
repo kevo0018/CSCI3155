@@ -69,7 +69,7 @@ B ::= aB|a
     -note: We can't choose Ab or we will have too many B's at the end
   
   3. bbaaaaa: FALSE
-    There is not a b at the end, which is included in the terminal above. (we cannot choose 'a' as the     
+    There is not a b at the end, which is included in the terminal above. (we cannot choose 'a' as the
     end statement)
  
   4. bbaab: TRUE
@@ -107,7 +107,7 @@ B ::= d|A
          |       |
          A    NOT POSSIBLE TO get 'b'  
         / \     
-       c   A    
+       c   A
            |
            c
   4. acd: FALSE (the output is length 3, but there is value that returns an empty set.)
@@ -126,17 +126,14 @@ B ::= d|A
 Question 2: Understanding a Language
 a)
   i)
-  -The first expression is left associative because the recursive non-terminal symbol is on the left of the   
-  parse tree.
+  -The first expression is left associative because the recursive non-terminal symbol is on the left of the parse tree.
   Thus, the expression would look like:
   operator operand operator operand operator operand 
   We recursively add operator operands on the left until we hit a terminal of just replacing e with 
   operand. 
 
-  -The second expression is right associative because the recursive non-terminal symbol is on the right of  
-  the parse tree.
-  We recursively add operator operands on the right until we hit a terminal of just replacing e with   
-  operand.
+  -The second expression is right associative because the recursive non-terminal symbol is on the right of the parse tree.
+  We recursively add operator operands on the right until we hit a terminal of just replacing e with operand.
   
   ii) These grammars DO NOT generate the same expression. The first expression build sfrom right to left
   and the second eqauation builds from left to right:
