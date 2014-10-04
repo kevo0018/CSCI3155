@@ -1,0 +1,184 @@
+Kevin Vo
+CSCI 3155: Lab2 Writeup
+Collaborator(s): Brady Auen
+
+
+Question 1: grammars - Synthetic Examples
+
+a) 
+
+----------------------------------
+a is in VObjects  b is in VObjects
+
+
+  s1 is in AObjects       s is in VObjects
+-----------------------   ----------------
+s1 & s2 are in AObjects   s is in AObjects
+
+b) The grammar in the previous statement is ambigious because order isn't specified. Thus, if you put the same input in twice, you could get a result that differs both times. In addition, you could also have different inputs, and result in the same output. For example, suppose we want our end result to be a & a & b. We could have one result being:
+
+          A                       A
+        / & \                   / & \
+       A     A                 A     A
+      / \    |                 |    / \
+     A & A   V         or      V   A & A
+     |   |   |                 |   |   |
+     V   V   b                 a   V   V
+     |   |                     |   |   |
+     a   a                     a   a   b
+     
+As shown in the example above, we have different inputs, but we have the same output. Similarly, we could have the same inputs put in above, but have different outputs.
+
+          A                       A
+        / & \                   / & \
+       A     A                 A     A
+      / \    |                / \    |
+     A & A   V         or    A & A   V
+     |   |   |               |   |   |
+     V   V   b               V   V   b
+     |   |                   |   |
+     a   b                   a   a
+
+c)
+S ::= A|B
+A ::= aA|a
+B ::= bB|e
+C ::= cC|c
+C ::= dD|d
+
+-S has only non terminal symbols A, B, C
+-A will either produce an 'a'A (which is a terminal and a non-terminal value) or an 'a'.
+-B will either produce an 'b'B (which is a terminal and a non-terminal value) or an empty set.
+-C will either produce an 'a'A (which is a terminal and a non-terminal value) or an 'c'.
+-D will either produce an 'a'A (which is a terminal and a non-terminal value) or an 'd'.
+
+d)
+S ::= AaBb
+A ::= Ab|b
+B ::= aB|a
+
+  1. baab: TRUE
+    i)  S ::= B a B b
+    ii) S ::= b a a b
+  
+  2. bbbab: FALSE
+    i)   S ::= Ab a B b
+    ii)  S ::= Abb a B b
+    iii) S ::= bbb a B b
+    iV)  S ::= bbb a Ab|b
+    -note: We can't choose Ab or we will have too many B's at the end
+  
+  3. bbaaaaa: FALSE
+    There is not a b at the end, which is included in the terminal above. (we cannot choose 'a' as the     
+    end statement)
+ 
+  4. bbaab: TRUE
+    i)   S ::= A b B  b
+    ii)  S ::= A b aB b
+    iii) S ::= b b a a b
+    
+e)
+S ::= aScB|A|b
+A ::= cA|c
+B ::= d|A
+
+  1. abcd: TRUE
+            S
+        / /   \ \
+       a S     c B
+         |       |
+         b       d      
+  
+  2. acccbd: FALSE (cannot turn 'B' into 'bd'.)
+            S
+        / /   \ \
+       a S     c B
+         |       |
+         A       A  
+        / \      |
+       c   A    NOT POSSIBLE
+           |
+           c
+  
+  3. acccbcc: FALSE (cannot turn 'B' into 'bcc')
+            S
+        / /   \ \
+       a S     c B
+         |       |
+         A    NOT POSSIBLE TO get 'b'  
+        / \     
+       c   A    
+           |
+           c
+  4. acd: FALSE (the output is length 3, but there is value that returns an empty set.)
+  
+  5. accc: TRUE
+              S
+        / /   \ \
+       a S     c B
+         |       |
+         A       A  
+        / \      |
+       c   A     c
+           |
+           c
+           
+Question 2: Understanding a Language
+a)
+  i)
+  -The first expression is left associative because the recursive non-terminal symbol is on the left of the   
+  parse tree.
+  Thus, the expression would look like:
+  operator operand operator operand operator operand 
+  We recursively add operator operands on the left until we hit a terminal of just replacing e with 
+  operand. 
+
+  -The second expression is right associative because the recursive non-terminal symbol is on the right of  
+  the parse tree.
+  We recursively add operator operands on the right until we hit a terminal of just replacing e with   
+  operand.
+  
+  ii) These grammars DO NOT generate the same expression. The first expression build sfrom right to left
+  and the second eqauation builds from left to right:
+  
+  The first parse tree is represented as:
+                     e
+             /      |       \
+            e    operator  operand
+            | 
+        operand
+        
+  The second parse tree is represented as:
+                     e     
+                 /         \
+            operator     esuffix
+                       /    |    \
+                operator operand  esuffix
+                                    |  
+                                empty set
+        
+b)
+We know that << x means multiply by 2^x. For example:
+  1 << 1 - 1
+  Returns 1
+  
+  1 - 1 << 1
+  Returns 0
+  
+  Using () to supplment order of opeations:
+  (1 << 1) - 1
+  Returns 1
+  
+  1 - (1 << 1)
+  Returns -1
+  
+Therefore, we know that '-' takes higher precedence since the results aren't matching the normal order of operations.
+
+c)
+
+WakaFlocka     ::= Negative BaseNumber ExponentNumber
+Negative       ::= - | epsilon
+BaseNumber     ::= Integer | Integer BaseNumber
+Integer        ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+Exponent       ::= Negative E | epsilon
+ExponentNumber ::= Integer | Integer ExponentNumber
