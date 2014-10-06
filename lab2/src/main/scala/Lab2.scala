@@ -3,6 +3,8 @@ object Lab2 extends jsy.util.JsyApplication {
   import jsy.lab2.ast._
   
   /*
+   * Kevin Vo & Justin Tang
+   * Collaborators: Brady Auen, Paul Kirilchuk
    * CSCI 3155: Lab 2
    */
 
@@ -53,7 +55,9 @@ object Lab2 extends jsy.util.JsyApplication {
   def toNumber(v: Expr): Double = {
     require(isValue(v))
     (v: @unchecked) match {
-      case N(n) => n
+      case N(n) => n												//We have a number
+      case B(b) => if (b) 1 else 0									//boolean case
+      case S(s) => if( AreAllNumber(s)) s.toDouble else Double.NaN 	//String case NaN=not a number
       case _ => throw new UnsupportedOperationException
     }
   }
@@ -61,8 +65,9 @@ object Lab2 extends jsy.util.JsyApplication {
   def toBoolean(v: Expr): Boolean = {
     require(isValue(v))
     (v: @unchecked) match {
-      case B(b) => b
-      case _ => throw new UnsupportedOperationException
+      case B(b) => b												//true if boolean
+      case N(n) => if(n==0) false else true							//number
+      case _ => false				
     }
   }
   
@@ -70,6 +75,8 @@ object Lab2 extends jsy.util.JsyApplication {
     require(isValue(v))
     (v: @unchecked) match {
       case S(s) => s
+      case N(n) => n.toStrong										//numbers to string
+      case B(b) => if (b) "true" else "false"
       case Undefined => "undefined"
       case _ => throw new UnsupportedOperationException
     }
@@ -78,12 +85,44 @@ object Lab2 extends jsy.util.JsyApplication {
   def eval(env: Env, e: Expr): Expr = {
     /* Some helper functions for convenience. */
     def eToVal(e: Expr): Expr = eval(env, e)
-
+	def eToNumber(e: Expr): Double = toNumber(eval(env, e))
+	def eToBoolean(e: Expr): Boolean = toBoolean(eval(env, e))
+	
+	
     e match {
       /* Base Cases */
+      case_if (isValue(e)) =>
+      case ConstDecl(x, e1, e2) => eval(extend(env, x, eToVal(e1)), e2)
+      case Unary(Neg, e1) => N(- eToNumber(e1))
+      case Unary(Not, e1) => B(! eToBoolean(e1))
+      case Binary(Plus, e1, e2) => N(toNumber(eval(env, e1)) + toNumber(eval(env, e2))
+      case Binary(Minus, e1, e2) => N(toNumber(eval(env, e1)) - toNumber(eval(env, e2))
+      case Binary(Times, e1, e2) => N(toNumber(eval(env, e1)) * toNumber(eval(env, e2))
+      case Binary(Div, e1, e2) => N(toNumber(eval(env, e1)) / toNumber(eval(env, e2))
+      case Binary(Eq, e1, e2) => N(toNumber(eval(env, e1)) == toNumber(eval(env, e2))
+      case Binary(Ne, e1, e2) => N(toNumber(eval(env, e1)) != toNumber(eval(env, e2))
+      case Binary(Lt, e1, e2) => N(toNumber(eval(env, e1)) < toNumber(eval(env, e2))
+      case Binary(Le, e1, e2) => N(toNumber(eval(env, e1)) <= toNumber(eval(env, e2))
+      case Binary(Gt, e1, e2) => N(toNumber(eval(env, e1)) > toNumber(eval(env, e2))
+      case Binary(Ge, e1, e2) => N(toNumber(eval(env, e1)) >= toNumber(eval(env, e2))
+      case Binary(And, e1, e2) => val(val1, val2) = (toBoolean(e1), toBoolean(e2))
+		(val1, val2) match {
+			case (true, true) => eToVal(e1)						//points to e1 or e2 b/c its true
+			case (false, true) => eToVal(e1)					//return e1 because it is false
+			case (true, false) => eToVal(e2)					//return e2 because it is false
+			case (false, false) => eToVal(e1)
+		}
+      case Binary(Or, e1, e2) => val(val1, val2) = (eToBoolean(e1), eToBoolean(e2))				//looking for Or
+		(val1, val2) match {
+			case (true, _) => eToVal(e1)						//return e1 because it is true
+			case (false, _) => etoVal(e2)						//return e2 because e1 is false, looking for wild card
+		}
+      case Binary(Seq, e1, e2) => eval(env, e1); eval(env, e2)
+      
       
       /* Inductive Cases */
       case Print(e1) => println(pretty(eToVal(e1))); Undefined
+      case If(e1, e2, e3) => if (eToBoolean(e1)) eToEval(e2) else eToVal(e3)		//return e2 or e3 if its true or false
 
       case _ => throw new UnsupportedOperationException
     }
