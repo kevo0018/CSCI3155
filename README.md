@@ -65,18 +65,18 @@ __CODE EXAMPLE: http://structure.usc.edu/python/whatsnew/node4.html__
           12}
 	>>> for key in m: print key, m[key]
 
-	Mar 3
-	Feb 2
-	Aug 8
-	Sep 9
-	May 5
-	Jun 6
-	Jul 7
-	Jan 1
-	Apr 4
-	Nov 11
-	Dec 12
-	Oct 10
+		Mar 3
+		Feb 2
+		Aug 8
+		Sep 9
+		May 5
+		Jun 6
+		Jul 7
+		Jan 1
+		Apr 4
+		Nov 11
+		Dec 12
+		Oct 10
 
 To iterate over keys or values, you can call the __iterkeys(), itervalues(),__ or __iteritems()__ methods to get the right iterator. So key in dict is equivalent to **dict.has_key(key)**. Dictionaries implement a **tp_iter** slot that returns an effective iterator that iterates over the keys of the dictionary.  During the iteration, the dictionary’s data is not changed in any way.
 
@@ -163,7 +163,7 @@ __ When return value is NULL, 3 possibru cases then:__
 	*Iterators should implement the tp_iter slot as recurring a reference to themselves. This makes it    possible to use an iterator in a for loop, as opposed to use a sequence.
 
 
-Python API Specification:
+# Python API Specification:
 
 A new built-in function is defined, iter(). It can be called in two ways:
 1. iter(obj) which can also call PyObject_GetIter(obj).
@@ -172,26 +172,13 @@ A new built-in function is defined, iter(). It can be called in two ways:
 
 Iterator objects that are returned by iter() have a next() method.  This method returns the next value in the iteration or calls StopIteration.
 
-#Why the Community Passed this Proposal:
+# Why the Community Passed this Proposal:
 It is a cleaner, faster and more user friendly method to traverse a list, dictionary or file.
 
 
+#Works Cited
+1. "Welcome to Python.org." Python.org. N.p., n.d. Web. 11 Dec. 2014.
+    * <https://www.python.org/dev/peps/pep-0234>
 
-
-
-
-
-
-
-
-
-
-
-
-Works Cited
-
-"Welcome to Python.org." Python.org. N.p., n.d. Web. 11 Dec. 2014.
-	<https://www.python.org/dev/peps/pep-0234>
-
-"3 PEP 234: Iterators." 3 PEP 234: Iterators. N.p., n.d. Web. 11 Dec. 2014.
-	<http://structure.usc.edu/python/whatsnew/node4.html>
+2. "3 PEP 234: Iterators." 3 PEP 234: Iterators. N.p., n.d. Web. 11 Dec. 2014.
+    * <http://structure.usc.edu/python/whatsnew/node4.html>
