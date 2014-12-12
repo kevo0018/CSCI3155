@@ -1,48 +1,45 @@
-__Why Propose:__
+# Why Propose:
 This proposal proposes an iteration interface that objects can
 offer to control the behavior of 'for' loops.
 
-__Reasons for Propose:__
+# Reasons for Propose:
 
 1. Gives an extensible iterator interface.
     * Previously there were pseudo iterators, but it's better to have a built in one so that we have an actual interface to work with rather than an abstract concept.
-
 2. Performance improvements to list iteration.
-⋅⋅* With the new change, we can manipulate lists quicker and more directly.
+    * With the new change, we can manipulate lists quicker and more directly.
 3. Massive performance improvements to dictionary iteration.
-⋅⋅* Same general concept as virtue two.
+    * Same general concept as virtue two.
 4. Provides an interface for iterating without pretending to offer random access to elements.
-⋅⋅* We don't have to cite obj[1], we actually have a literal iterator that's going through the contents of our object. 
+    * We don't have to cite obj[1], we actually have a literal iterator that's going through the contents of our object. 
 5. Backward compatible with all existing user-defined classes and extension objects.
-⋅⋅* Bringing iterators in won't cause any problems among objects and classes that already exist, the iterators will be compatible with them.
+    * Bringing iterators in won't cause any problems among objects and classes that already exist, the iterators will be compatible with them.
 6. Code iterating over non-sequence collections more brief and clear.
-⋅⋅* This is referring to iterating things that aren't sequences (think Lists), iterators make this process easier.
+    * This is referring to iterating things that aren't sequences (think Lists), iterators make this process easier.
+
+# How it Works: 
+The iterator gives a __'get next value'__ operation that makes the next item in the sequence each time it is called. The operation gives an exception when no more things are accessible. There is only one required method, next(), which takes no arguments and returns the next value. When no values are left to be returned, calling next() should give the StopIteration exception.
 
 
-How it Works: 
-The iterator gives a 'get next value' operation that makes
-the next item in the sequence each time it is called. The operation gives an
-exception when no more things are accessible. There is only one required method, next(), which takes no arguments and returns the next value. When no values are left to be returned, calling next() should give the StopIteration exception.
-
-
-How it Works cont:      
+# How it Works cont:      
 Before this update there wasn't a clear way for the user to iterate through the contents of objects in Python.  If the user wanted to create a "for item in object" sort of function, the method would look sort of like this:
 
-def __getitem__(self, index):
-	return <next item>
+	def __getitem__(self, index):
+		return <next item>
 
-Even then, getitem methods were most commonly used to randomly access via indexing, so we could write object[x] to get the x+1'th item.  Of course there are certain objects that can't be randomly accessed like this, so in 2.2 Python really advanced itself by allowing these getitem methods to be limited solely to classes that support it.
-	We have two built in functions that we can use to get iterators, the first is:
+Even then, getitem methods were most commonly used to randomly access via indexing, so we could write __object[x]__ to get the __x+1'th item__.  Of course there are certain objects that can't be randomly accessed like this, so in 2.2 Python really advanced itself by allowing these getitem methods to be limited solely to classes that support it. We have two built in functions that we can use to get iterators, the first is:
 
 	iter(obj)
-       and the second is: 
+
+and the second is: 
+	
 	iter(C, sentinel)
-The first method is rather simple, obj is just the name of some object and thus we're provided an iterator for that object.  iter(C, sentinel) returns an iterator that will invoke C until "sentinel" is returned, in which case the iterator is finished, so sentinel is essentially just a stop case.  Python classes can also define an __iter__() method which creates and returns an iterator for an object, if that object is an iterator then it will return itself. 
-	The purpose of iterators is in the name, they iterate through things. They have one required method called next(). Next() takes no arguments and only returns the next value, when there is no next value a "StopIteration" exception is called.  A StopIteration except will continue to be called if next() is used again, it's an exception that signals the end of an iteration. If we were to make an iterator for a list type object, the code might look something this:
+
+The first method is rather simple, obj is just the name of some object and thus we're provided an iterator for that object.  __iter(C, sentinel)__ returns an iterator that will invoke C until "sentinel" is returned, in which case the iterator is finished, so sentinel is essentially just a stop case.  Python classes can also define an __iter()__ method which creates and returns an iterator for an object, if that object is an iterator then it will return itself. The purpose of iterators is in the name, they iterate through things. They have one required method called __next()__. Next() takes no arguments and only returns the next value, when there is no next value a __"StopIteration"__ exception is called.  A StopIteration except will continue to be called if next() is used again, it's an exception that signals the end of an iteration. If we were to make an iterator for a list type object, the code might look something this:
 
 
-List = [1,2,3,4,5]
-iterator = iter(List)
+	List = [1,2,3,4,5]
+	iterator = iter(List)
 
 If we wrote "print iterator" at this point, we'd get the location of the iterator object in memory, but if we used next() like so:
 iterator.next()
