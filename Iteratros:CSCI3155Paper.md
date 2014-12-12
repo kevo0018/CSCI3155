@@ -1,5 +1,5 @@
 #Iterators:
-By Brady Auen, Paul Kirilchuk, Kevin Vo
+This paper is written by Brady Auen, Paul Kirilchuk, and Kevin Vo for CSCI 3155.
 
 ## Why Propose:
 This proposal proposes an iteration interface that objects can
