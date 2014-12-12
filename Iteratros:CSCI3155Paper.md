@@ -1,8 +1,11 @@
-# Why Propose:
+#Iterators:
+By Brady Auen, Paul Kirilchuk, Kevin Vo
+
+## Why Propose:
 This proposal proposes an iteration interface that objects can
 offer to control the behavior of 'for' loops.
 
-# Reasons for Propose:
+## Reasons for Propose:
 
 1. Gives an extensible iterator interface.
     * Previously there were pseudo iterators, but it's better to have a built in one so that we have an actual interface to work with rather than an abstract concept.
@@ -17,11 +20,11 @@ offer to control the behavior of 'for' loops.
 6. Code iterating over non-sequence collections more brief and clear.
     * This is referring to iterating things that aren't sequences (think Lists), iterators make this process easier.
 
-# How it Works: 
+## How it Works: 
 The iterator gives a __'get next value'__ operation that makes the next item in the sequence each time it is called. The operation gives an exception when no more things are accessible. There is only one required method, next(), which takes no arguments and returns the next value. When no values are left to be returned, calling next() should give the StopIteration exception.
 
 
-# How it Works cont:      
+## How it Works Examples:      
 Before this update there wasn't a clear way for the user to iterate through the contents of objects in Python.  If the user wanted to create a "for item in object" sort of function, the method would look sort of like this:
 
 	def __getitem__(self, index):
@@ -46,7 +49,7 @@ If we wrote "print iterator" at this point, we'd get the location of the iterato
 	
 The iterator would then hold 1, then 2, and so on.
 
-#Iterating in Dictionaries:
+## Iterating in Dictionaries:
 Iterators can also with in dictionaries with their keys.  For those not familiar with python, dictionaries are similar to structs in C, so in coding a dictionary could look like this:
 	dictionary = {'Age': 21, 'Weight': 200, 'Name': 'Brady'}
 
@@ -141,10 +144,10 @@ This change also allows us to iterate through files more effectively, so if you 
 
 This allows us to iterate through each line of the txt file much faster than we ever had before. This simply iterates through a text file line by line in for loop style fashion.  		
 
-# Apply the terminology and concepts we have used throughout the course:
+## Apply the terminology and concepts we have used throughout the course:
 __-“syntax that makes certain common tasks easier or less error prone in the language, perhaps describe the syntax in the context of allowed grammar productions.” -pdf__
 
-# What Does the Iterator Feature Add?:  
+## What Does the Iterator Feature Add?:  
 * A new exception is defined, StopIteration, which signals the end of an iteration.
 
 * A new slot called tp_iter, that adds an iterator to the type object structure.
@@ -162,7 +165,7 @@ The Python byte code created for 'for' loops is transformed to use new codes, FO
 Iterators should implement the tp_iter slot as recurring a reference to themselves. This makes it    possible to use an iterator in a for loop, as opposed to use a sequence.
 
 
-# Python API Specification:
+## Python API Specification:
 
 A new built-in function is defined, iter(). It can be called in two ways:
 1. iter(obj) which can also call PyObject_GetIter(obj).
@@ -171,11 +174,11 @@ A new built-in function is defined, iter(). It can be called in two ways:
 
 Iterator objects that are returned by iter() have a next() method.  This method returns the next value in the iteration or calls StopIteration.
 
-# Why the Community Passed this Proposal:
+## Why the Community Passed this Proposal:
 It is a cleaner, faster and more user friendly method to traverse a list, dictionary or file.
 
 
-#Works Cited
+## Works Cited
 1. "Welcome to Python.org." Python.org. N.p., n.d. Web. 11 Dec. 2014.
     * <https://www.python.org/dev/peps/pep-0234>
 
