@@ -5,21 +5,17 @@ offer to control the behavior of 'for' loops.
 __Reasons for Propose:__
 
 1. Gives an extensible iterator interface.
-- Previously there were pseudo iterators, but it's better to have a built in one so that we have an actual interface to work with rather than an abstract concept.
+⋅⋅* Previously there were pseudo iterators, but it's better to have a built in one so that we have an actual interface to work with rather than an abstract concept.
 2. Performance improvements to list iteration.
-- With the new change, we can manipulate lists quicker and more directly.
+⋅⋅* With the new change, we can manipulate lists quicker and more directly.
 3. Massive performance improvements to dictionary iteration.
--Same general concept as virtue two.
+⋅⋅* Same general concept as virtue two.
 4. Provides an interface for iterating without pretending to offer random access to elements.
-- We don't have to cite obj[1], we actually have a literal iterator that's going through the contents of our object. 
-
-    5.        Backward compatible with all existing user-defined classes and extension objects.
-- Bringing iterators in won't cause any problems among objects and classes that already exist, the iterators will be compatible with them.
-
-
-    6.       Code iterating over non-sequence collections more brief and clear.
--This is referring to iterating things that aren't sequences (think Lists), iterators make this   
-   process easier.
+⋅⋅* We don't have to cite obj[1], we actually have a literal iterator that's going through the contents of our object. 
+5. Backward compatible with all existing user-defined classes and extension objects.
+⋅⋅* Bringing iterators in won't cause any problems among objects and classes that already exist, the iterators will be compatible with them.
+6. Code iterating over non-sequence collections more brief and clear.
+⋅⋅* This is referring to iterating things that aren't sequences (think Lists), iterators make this process easier.
 
 
 How it Works: 
