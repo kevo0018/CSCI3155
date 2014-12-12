@@ -150,11 +150,11 @@ __-“syntax that makes certain common tasks easier or less error prone in the l
 * A new slot called tp_iter, that adds an iterator to the type object structure.
 
 * Another new slot is added to the type structure called tp_iternext. It’s for getting the next value in the iteration.
-	
-** When return value is NULL, 3 possibru cases then: **
-1. No exception is set; which means the end of the iteration.
-2: The StopIteration exception is set; this signals the end of the iteration.
-3: Some other exception is set.
+* When return value is NULL, 3 possibru cases then:
+
+    ⋅⋅1. No exception is set; which means the end of the iteration.
+    ⋅⋅2. The StopIteration exception is set; this signals the end of the iteration.
+    ⋅⋅3. Some other exception is set.
 
 
 
