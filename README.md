@@ -150,11 +150,11 @@ __-“syntax that makes certain common tasks easier or less error prone in the l
 * A new slot called tp_iter, that adds an iterator to the type object structure.
 
 * Another new slot is added to the type structure called tp_iternext. It’s for getting the next value in the iteration.
-* When return value is NULL, 3 possibru cases then:
-    ⋅⋅1. No exception is set; which means the end of the iteration.
-    ⋅⋅2. The StopIteration exception is set; this signals the end of the iteration.
-    ⋅⋅3. Some other exception is set.
 
+* When return value is NULL, 3 possibru cases then:
+	1. No exception is set; which means the end of the iteration.
+	2. The StopIteration exception is set; this signals the end of the iteration.
+	3. Some other exception is set.
 
 
 	* The Python byte code created for 'for' loops is transformed to use new codes, FOR_ITER and GET_ITER that use the iterator procedure rather than the sequence procedure to get the next value for the loop value.  Its then possible to use a 'for' loop to loop over non sequential objects that help the tp_iter slot.
