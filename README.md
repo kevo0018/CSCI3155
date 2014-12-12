@@ -157,9 +157,9 @@ __-“syntax that makes certain common tasks easier or less error prone in the l
 	3. Some other exception is set.
 
 
-	* The Python byte code created for 'for' loops is transformed to use new codes, FOR_ITER and GET_ITER that use the iterator procedure rather than the sequence procedure to get the next value for the loop value.  Its then possible to use a 'for' loop to loop over non sequential objects that help the tp_iter slot.
+The Python byte code created for 'for' loops is transformed to use new codes, FOR_ITER and GET_ITER that use the iterator procedure rather than the sequence procedure to get the next value for the loop value.  Its then possible to use a 'for' loop to loop over non sequential objects that help the tp_iter slot. 
 
-	*Iterators should implement the tp_iter slot as recurring a reference to themselves. This makes it    possible to use an iterator in a for loop, as opposed to use a sequence.
+Iterators should implement the tp_iter slot as recurring a reference to themselves. This makes it    possible to use an iterator in a for loop, as opposed to use a sequence.
 
 
 # Python API Specification:
