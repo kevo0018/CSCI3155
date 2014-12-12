@@ -151,8 +151,7 @@ __-“syntax that makes certain common tasks easier or less error prone in the l
 
 * Another new slot is added to the type structure called tp_iternext. It’s for getting the next value in the iteration.
 	
-
-__ When return value is NULL, 3 possibru cases then:__
+** When return value is NULL, 3 possibru cases then: **
 1. No exception is set; which means the end of the iteration.
 2: The StopIteration exception is set; this signals the end of the iteration.
 3: Some other exception is set.
