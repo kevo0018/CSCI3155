@@ -5,7 +5,9 @@ offer to control the behavior of 'for' loops.
 __Reasons for Propose:__
 
 1. Gives an extensible iterator interface.
+
 ⋅⋅* Previously there were pseudo iterators, but it's better to have a built in one so that we have an actual interface to work with rather than an abstract concept.
+
 2. Performance improvements to list iteration.
 ⋅⋅* With the new change, we can manipulate lists quicker and more directly.
 3. Massive performance improvements to dictionary iteration.
