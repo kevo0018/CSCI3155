@@ -42,157 +42,138 @@ The first method is rather simple, obj is just the name of some object and thus 
 	iterator = iter(List)
 
 If we wrote "print iterator" at this point, we'd get the location of the iterator object in memory, but if we used next() like so:
-iterator.next()
-then iterator would hold 1, then 2, and so on.
+	iterator.next()
+	
+The iterator would then hold 1, then 2, and so on.
 
-Iterating in Dictionaries:
+#Iterating in Dictionaries:
 Iterators can also with in dictionaries with their keys.  For those not familiar with python, dictionaries are similar to structs in C, so in coding a dictionary could look like this:
-dictionary = {'Age': 21, 'Weight': 200, 'Name': 'Brady'}
+	dictionary = {'Age': 21, 'Weight': 200, 'Name': 'Brady'}
+
 Inside a dictionary are pairs of "keys" and values that they correspond to, in this case our keys would be Age, Weight, and Name.  So we're allowed to write lines of code like:
 
-for k in dict: 
-for key in dict.iterkeys():
-for value in dict.itervalues():
+	for k in dict: 
+	for key in dict.iterkeys():
+	for value in dict.itervalues():
 
-So we could use our iterator to traverse the keys of a dictionary and do whatever we want from there. Other mappings that support iterators should also be able to iterate over keys, but this isn't an absolute rule as specific applications may have different requirements.
-Iterator support has been added to some of Python's basic types. Calling iter() on a dictionary will return an iterator which loops over its keys:
-CODE EXAMPLE:      http://structure.usc.edu/python/whatsnew/node4.html 
+So we could use our iterator to traverse the keys of a dictionary and do whatever we want from there. Other mappings that support iterators should also be able to iterate over keys, but this isn't an absolute rule as specific applications may have different requirements. Iterator support has been added to some of Python's basic types. Calling iter() on a dictionary will return an iterator which loops over its keys:
+
+__CODE EXAMPLE: http://structure.usc.edu/python/whatsnew/node4.html__
+	
 	>>> m = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
          'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec':   
           12}
 	>>> for key in m: print key, m[key]
 
-Mar 3
-Feb 2
-Aug 8
-Sep 9
-May 5
-Jun 6
-Jul 7
-Jan 1
-Apr 4
-Nov 11
-Dec 12
-Oct 10
+	Mar 3
+	Feb 2
+	Aug 8
+	Sep 9
+	May 5
+	Jun 6
+	Jul 7
+	Jan 1
+	Apr 4
+	Nov 11
+	Dec 12
+	Oct 10
 
-^ To iterate over keys or values, you can call the iterkeys(), itervalues(), or iteritems() methods to get the right iterator. So key in dict is equivalent to dict.has_key(key).
-Dictionaries implement a tp_iter slot that returns an effective iterator that iterates over the keys of the dictionary.  During the iteration, the dictionary’s data is not changed in any way.
+To iterate over keys or values, you can call the __iterkeys(), itervalues(),__ or __iteritems()__ methods to get the right iterator. So key in dict is equivalent to **dict.has_key(key)**. Dictionaries implement a **tp_iter** slot that returns an effective iterator that iterates over the keys of the dictionary.  During the iteration, the dictionary’s data is not changed in any way.
 
-		CODE EXAMPLE:   https://www.python.org/dev/peps/pep-0234/
-			This means that we can write
+__CODE EXAMPLE: https://www.python.org/dev/peps/pep-0234/__
 
-			   for k in dict: ...
+This means that we can write
 
-    		        which is equivalent to, but much faster than
+	for k in dict: ...
 
-        		 	 for k in dict.keys(): ...
+which is equivalent to, but much faster than
 
+	for k in dict.keys(): ...
 
-
-
-
-
-
-Iterating in Files:
+__Iterating in Files:__
 Files also provide an iterator, which calls the readline() method until there are no more lines in the file. This means that you can now read each line of a file using code similar below:
-		CODE EXAMPLE:        http://structure.usc.edu/python/whatsnew/node4.html
-				for line in file:
-     # do something for each line
-    ...
+
+__CODE EXAMPLE: http://structure.usc.edu/python/whatsnew/node4.html__
+	for line in file:
+	# do something for each line...
 	
-- The following proposal is useful because it offers us with a good answer to the problem of iterate over the lines in a slow and nasty fashion. Ultimately, using an iterator is faster and more clear.
+The following proposal is useful because it offers us with a good answer to the problem of iterate over the lines in a slow and nasty fashion. Ultimately, using an iterator is faster and more clear.
 
-		CODE EXAMPLE:      https://www.python.org/dev/peps/pep-0234/
-			 Files implement a tp_iter slot that is equivalent to
-     				 iter(f.readline, "").  
+__CODE EXAMPLE: https://www.python.org/dev/peps/pep-0234/__
+Files implement a tp_iter slot that is equivalent to iter(f.readline, ""). This means that we can write:
+	for line in file:...
 
-			This means that we can write
-				for line in file:
-             			 ...
-			which is equivalent to, but faster than
-				while 1:
-           			   line = file.readline()
-           			   if not line:
-        			          break
-   			          ...
+which is equivalent to, but faster than
+	
+	while 1:
+        	line = file.readline()
+           	if not line:
+        		break
 
+Some iterators are destructive: they devour the values and a second iterator can’t simply be created that iterates individually over the same data.
 
-
-- Some iterators are destructive: they devour the values and a second iterator can’t simply be created that iterates individually over the same data.
-		
-		CODE EXAMPLE:
+__CODE EXAMPLE:__
 
 Because the file iterator uses an internal buffer, combining it with other file operations like, file.readline() won’t work right.  Also, the following code:
 
-			for line in file:
-         		     if line == "\n":
-            			  break
-     		       for line in file:
-   			     print line,
+	for line in file:
+        	if line == "\n":
+        		break
+     		for line in file:
+   			print line,
 
-doesn't work as you might imagine, because the iterator made by the second for-loop doesn't take the first for loop into consideration. The correct way to write it:
+This code doesn't work as you might imagine. This is because the iterator made by the second for-loop doesn't take the first for loop into consideration. The correct way to write it:
 
-			CODE EXAMPLE/:      https://www.python.org/dev/peps/pep-0234
+__CODE EXAMPLE: https://www.python.org/dev/peps/pep-0234__
 
-			it = iter(file)
-     		                  for line in it:
-                                                         if line == "\n":
-                 		                break
-                                                    for line in it:
-            	                                        print line,
+	it = iter(file)
+     		for line in it:
+        		if line == "\n":
+        			break
+                for line in it:
+        		print line,
 
-
-
-		^ WHY this is faster, 
-    The iterator version is significantly faster than calling readline(), because of the interior buffer in the     iterator.
-
+The iterator version is significantly faster than calling readline() because of the interior buffer in the iterator.
 
 This change also allows us to iterate through files more effectively, so if you ever have a python application that requires input from a text file you could use the line:
-
-for line in file:
+	
+	for line in file:
 
 This allows us to iterate through each line of the txt file much faster than we ever had before. This simply iterates through a text file line by line in for loop style fashion.  		
 
+# Apply the terminology and concepts we have used throughout the course:
+__-“syntax that makes certain common tasks easier or less error prone in the language, perhaps describe the syntax in the context of allowed grammar productions.” -pdf__
+
+# What Does the Iterator Feature Add?:  
+* A new exception is defined, StopIteration, which signals the end of an iteration.
+
+* A new slot called tp_iter, that adds an iterator to the type object structure.
+
+* Another new slot is added to the type structure called tp_iternext. It’s for getting the next value in the iteration.
+	
+__ When return value is NULL, 3 possibru cases then:__
+1. No exception is set; which means the end of the iteration.
+2: The StopIteration exception is set; this signals the end of the iteration.
+3: Some other exception is set.
 
 
 
-Apply the terminology and concepts we have used throughout the course:
--“syntax that makes certain common tasks easier or less error prone in the language, perhaps describe the syntax in the context of allowed grammar productions.” -pdf
+	* The Python byte code created for 'for' loops is transformed to use new codes, FOR_ITER and GET_ITER that use the iterator procedure rather than the sequence procedure to get the next value for the loop value.  Its then possible to use a 'for' loop to loop over non sequential objects that help the tp_iter slot.
 
-What Does the Iterator Feature Add?:  
-- A new exception is defined, StopIteration, which signals the end of an iteration.
-
-- A new slot called tp_iter, that adds an iterator to the type object structure.
-
-- Another new slot is added to the type structure called tp_iternext. It’s for getting the next value    in the iteration.
-		-When return value is NULL, 3 possibru cases then:
-	1: No exception is set; which means the end of the iteration.
-
-			2: The StopIteration exception is set; this signals the end of the iteration.
-
-			3: Some other exception is set.
-
-
-
-- The Python byte code created for 'for' loops is transformed to use new codes, FOR_ITER and GET_ITER that use the iterator procedure rather than the sequence procedure to get the next value for the loop value.  Its then possible to use a 'for' loop to loop over non sequential objects that help the tp_iter slot.
-
-- Iterators should implement the tp_iter slot as recurring a reference to themselves. This makes it    possible to use an iterator in a for loop, as opposed to use a sequence.
+	*Iterators should implement the tp_iter slot as recurring a reference to themselves. This makes it    possible to use an iterator in a for loop, as opposed to use a sequence.
 
 
 Python API Specification:
 
 A new built-in function is defined, iter(). It can be called in two ways:
-		   iter(obj) which can also call PyObject_GetIter(obj).
+1. iter(obj) which can also call PyObject_GetIter(obj).
+2. iter(obj) = returns an iterator for the object obj
+3. iter(C, sentinel) returns an iterator that will call the callable object C until it returns sentinel to indicate that the iterator is complete.
 
-	- iter(obj) = returns an iterator for the object obj
+Iterator objects that are returned by iter() have a next() method.  This method returns the next value in the iteration or calls StopIteration.
 
-- iter(C, sentinel) returns an iterator that will call the callable object C until it returns sentinel to indicate that the iterator is complete.
-
--  Iterator objects that are returned by iter() have a next() method.  This method returns the next value in the iteration or calls StopIteration.
-
-
-Why the Community Passed this Proposal:
-	-A clearer, faster and more user friendly method to traverse a list, dictionary or file.
+#Why the Community Passed this Proposal:
+It is a cleaner, faster and more user friendly method to traverse a list, dictionary or file.
 
 
 
